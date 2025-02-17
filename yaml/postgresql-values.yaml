@@ -1,0 +1,22 @@
+global:
+  postgresql:
+    auth:
+      existingSecret: postgresql-secret
+
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClass: "local-path"
+
+primary:
+  extendedConfiguration: |
+    shared_preload_libraries = 'pg_stat_statements'
+    pg_stat_statements.track = all
+    pg_stat_statements.max = 10000
+    pg_stat_statements.save = on
+
+  initdb:
+    scripts:
+      enable_extensions.sql: |
+        ALTER DATABASE devops SET shared_preload_libraries = 'pg_stat_statements';
+        CREATE EXTENSION IF NOT EXISTS pg_stat_statements;

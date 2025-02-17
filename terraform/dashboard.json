@@ -1,0 +1,53 @@
+{
+    "dashboard": {
+      "id": null,
+      "title": "PostgreSQL Performance Metrics",
+      "timezone": "browser",
+      "panels": [
+        {
+          "title": "CPU Usage",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "rate(node_cpu_seconds_total{mode!=\"idle\"}[5m])",
+              "legendFormat": "{{cpu}}",
+              "interval": ""
+            }
+          ]
+        },
+        {
+          "title": "Memory Usage",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes",
+              "legendFormat": "Used Memory",
+              "interval": ""
+            }
+          ]
+        },
+        {
+          "title": "Throughput (Transactions per Second)",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "rate(pg_stat_database_xact_commit[5m])",
+              "legendFormat": "Commits",
+              "interval": ""
+            },
+            {
+              "expr": "rate(pg_stat_database_xact_rollback[5m])",
+              "legendFormat": "Rollbacks",
+              "interval": ""
+            }
+          ]
+        }
+      ],
+      "schemaVersion": 26,
+      "version": 1
+    }
+  }
+  
