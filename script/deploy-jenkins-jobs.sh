@@ -3,7 +3,7 @@
 NAMESPACE="jenkins"
 
 echo "📂 Creating ConfigMaps for Job DSL scripts..."
-kubectl create configmap jenkins-init-dsl --from-file=jenkins/init.groovy -n $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+kubectl create configmap jenkins-init-dsl --from-file=jenkins/init.groovy --from-file=jenkins/job-dsl.groovy -n $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
 
 echo "📦 Patching Jenkins StatefulSet to include Job DSL scripts..."
 kubectl patch statefulset jenkins -n $NAMESPACE --type=json -p='[
@@ -24,6 +24,15 @@ kubectl patch statefulset jenkins -n $NAMESPACE --type=json -p='[
       "name": "jenkins-init-dsl",
       "mountPath": "/var/jenkins_home/init.groovy",
       "subPath": "init.groovy"
+    }
+  },
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/volumeMounts/-",
+    "value": {
+      "name": "jenkins-init-dsl",
+      "mountPath": "/var/jenkins_home/job-dsl.groovy",
+      "subPath": "job-dsl.groovy"
     }
   }
 ]'
