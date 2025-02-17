@@ -2,6 +2,11 @@
 
 NAMESPACE="jenkins"
 
+kubectl apply -f yaml/jenkins-worker/jenkins-worker-sa.yaml
+kubectl apply -f yaml/jenkins-worker/jenkins-worker-role.yaml
+kubectl apply -f yaml/jenkins-worker/jenkins-worker-rolebinding.yaml
+
+
 echo "📂 Creating ConfigMaps for Job DSL scripts..."
 kubectl create configmap jenkins-init-dsl --from-file=jenkins/init.groovy --from-file=jenkins/job-dsl.groovy -n $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
 
